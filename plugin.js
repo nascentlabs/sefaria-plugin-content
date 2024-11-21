@@ -122,7 +122,7 @@ class SefariaPlugin extends HTMLElement {
     this.container.innerHTML = ''; // Clear previous content
 
     // Back Button
-    const backButton = document.createElement('button');
+    const backButton = document.createElement('a');
     backButton.textContent = '← Back to Lectures';
     backButton.addEventListener('click', () => {
       this.isPlaying = false;
