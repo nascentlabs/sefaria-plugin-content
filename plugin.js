@@ -64,14 +64,14 @@
       try {
         const response = await fetch(apiUrl);
         const data = await response.json();
-        this.renderResults(data.response.docs);
+        this.renderResults(data.response.docs, query);
       } catch (error) {
         console.error('Error fetching data:', error);
         this.resultsContainer.innerHTML = '<p>Error fetching data.</p>';
       }
     }
 
-    renderResults(docs) {
+    renderResults(docs, query) {
       this.resultsContainer.innerHTML = ''; // Clear previous results
 
       if (!docs || docs.length === 0) {
