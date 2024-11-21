@@ -1,4 +1,4 @@
-class LectureSearch extends HTMLElement {
+class SefariaPlugin extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -147,4 +147,4 @@ class LectureSearch extends HTMLElement {
 }
 
 // Define the new custom element
-customElements.define('sefaria-plugin', LectureSearch);
+customElements.define('sefaria-plugin', SefariaPlugin);
