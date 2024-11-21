@@ -91,7 +91,7 @@ class SefariaPlugin extends HTMLElement {
       this.container.innerHTML = '<p>No results found.</p>';
       return;
     } else {
-      this.container.innerHTML = `<h1>YUTorah Shiurim for ${query}</h1>`;
+      this.container.innerHTML = `<h1>YUTorah on ${query}</h1>`;
     }
 
     const list = document.createElement('ul');
