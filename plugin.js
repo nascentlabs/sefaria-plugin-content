@@ -78,6 +78,9 @@
         this.resultsContainer.innerHTML = '<p>No results found.</p>';
         return;
       }
+      else {
+        this.resultsContainer.innerHTML = '<p>YUTorah Shiurim for ${query}</p>';
+      }
 
       const list = document.createElement('ul');
 
