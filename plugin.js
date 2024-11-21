@@ -16,7 +16,7 @@
           font-family: Arial, sans-serif;
         }
         ul {
-          list-style-type: none;
+          list-style-type: disclosure-closed;
           padding-left: 0;
         }
         li {
@@ -24,7 +24,9 @@
         }
         a {
           text-decoration: none;
-          color: blue;
+          color: #000000;
+          font-family: cursive;
+          font-size: 14px;
         }
         a:hover {
           text-decoration: underline;
