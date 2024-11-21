@@ -18,7 +18,7 @@ class SefariaPlugin extends HTMLElement {
         font-family: Arial, sans-serif;
       }
       ul {
-        list-style-type: disclosure-closed;
+        list-style-type: decimal;
         padding-left: 0;
       }
       li {
