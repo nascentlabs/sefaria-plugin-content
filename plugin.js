@@ -100,4 +100,4 @@
   }
 
 // Define the new custom element
-customElements.define('custom-element', LectureSearch);
+customElements.define('sefaria-plugin', LectureSearch);
