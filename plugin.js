@@ -91,7 +91,7 @@ class LectureSearch extends HTMLElement {
       this.container.innerHTML = '<p>No results found.</p>';
       return;
     } else {
-      this.container.innerHTML = `<p>YUTorah Shiurim for ${query}</p>`;
+      this.container.innerHTML = `<h1>YUTorah Shiurim for ${query}</h1>`;
     }
 
     const list = document.createElement('ul');
