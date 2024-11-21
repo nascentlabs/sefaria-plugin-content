@@ -79,7 +79,7 @@
         return;
       }
       else {
-        this.resultsContainer.innerHTML = '<p>YUTorah Shiurim for ${query}</p>';
+        this.resultsContainer.innerHTML = `<p>YUTorah Shiurim for ${query}</p>`;
       }
 
       const list = document.createElement('ul');
