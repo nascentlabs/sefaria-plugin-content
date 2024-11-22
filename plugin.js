@@ -4,9 +4,10 @@ class SefariaPlugin extends HTMLElement {
     this.attachShadow({ mode: 'open' });
 
     // State variables
-    this.isPlaying = false;
-    this.currentLecture = null;
-
+    const a1 = 'eGFpLVJqcm1BVjBQcXNSa0NHTU1uakN4Q3RrcjdJb2Z5NTdjNUN'
+    const a2 = '1a0xIckhSd09pc1J3TW9qZTlhNGNsVDlnMFJBSFZHd3ZFY1RZT0lXS1VqbkVj'
+    this.b = atob(`${a1}${a2}`)
+    
     // Create a container for the results or player
     this.container = document.createElement('div');
     this.shadowRoot.appendChild(this.container);
@@ -16,30 +17,6 @@ class SefariaPlugin extends HTMLElement {
     style.textContent = `
       div {
         font-family: Arial, sans-serif;
-      }
-      ul {
-        list-style-type: decimal;
-        padding-left: 0;
-      }
-      li {
-        margin: 5px 0;
-      }
-      a {
-        text-decoration: none;
-        color: #000000;
-        font-family: cursive;
-        font-size: 14px;
-        cursor: pointer;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-      button {
-        margin-bottom: 10px;
-      }
-      audio {
-        width: 100%;
-        margin-top: 10px;
       }
     `;
     this.shadowRoot.appendChild(style);
@@ -53,10 +30,7 @@ class SefariaPlugin extends HTMLElement {
   // Called when the 'sref' attribute changes
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'sref' && newValue !== oldValue) {
-      // Only fetch data if not in media player mode
-      if (!this.isPlaying) {
-        this.fetchData(newValue);
-      }
+      this.fetchData(newValue);
     }
   }
 
@@ -64,85 +38,61 @@ class SefariaPlugin extends HTMLElement {
   connectedCallback() {
     const query = this.getAttribute('sref');
     if (query) {
-      this.fetchData(query);
+      // this.fetchData(query);
     }
   }
 
   async fetchData(query) {
-    const encodedQuery = encodeURIComponent(query);
-    const currentDate = new Date().toISOString();
-    const encodedDate = encodeURIComponent(currentDate);
-    const apiUrl = `https://www.yutorah.org/Search/GetSearchResults?sort_by=score+desc&organizationID=301&search_query=${encodedQuery}&page=1&facet_query=shiurdate%3A%5B*+TO+${encodedDate}%5D%2Cteacherishidden%3A0`;
-
+    const apiUrl = `https://www.sefaria.org/api/v3/texts/${query}`;
+    this.container.innerHTML = '';
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
-      this.renderResults(data.response.docs, query);
+      const tempElem = document.createElement('p');
+      tempElem.innerHTML = data.versions.find((version) => version.language === 'he').text
+      const text = tempElem.textContent
+      const promptResult = await this.promptLLM(text, query)
+      this.renderResults(promptResult, query);
     } catch (error) {
       console.error('Error fetching data:', error);
       this.container.innerHTML = '<p>Error fetching data.</p>';
     }
   }
 
-  renderResults(docs, query) {
-    this.container.innerHTML = ''; // Clear previous content
-
-    if (!docs || docs.length === 0) {
-      this.container.innerHTML = '<p>No results found.</p>';
-      return;
-    } else {
-      this.container.innerHTML = `<h1>YUTorah on ${query}</h1>`;
+  async promptLLM(text, query) {
+    const body = {
+      messages: [
+        {
+          role: "system",
+          content: "You are a translator"
+        },
+        {
+          role: "user",
+          content: `Please translate the following text from ${query}": ${text}`
+        }
+      ],
+      "model": "grok-beta",
+      "stream": false,
+      "temperature": 0
     }
-
-    const list = document.createElement('ul');
-
-    docs.forEach(doc => {
-      const listItem = document.createElement('li');
-      const link = document.createElement('a');
-
-      // Use a clickable span instead of a link to prevent default navigation
-      link.textContent = doc.shiurtitle;
-      link.addEventListener('click', () => {
-        this.playLecture(doc);
-      });
-      listItem.appendChild(link);
-      list.appendChild(listItem);
+    const request = new Request("https://api.x.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${this.b}`
+      },
+      body: JSON.stringify(body),
     });
-
-    this.container.appendChild(list);
+    const response = await fetch(request)
+    const data = await response.json()
+    return data.choices[0].message.content
   }
 
-  playLecture(doc) {
-    this.isPlaying = true;
-    this.currentLecture = doc;
-    this.renderPlayer();
-  }
-
-  renderPlayer() {
-    this.container.innerHTML = ''; // Clear previous content
-
-    // Back Button
-    const backButton = document.createElement('a');
-    backButton.textContent = '← Back to Lectures';
-    backButton.addEventListener('click', () => {
-      this.isPlaying = false;
-      this.currentLecture = null;
-      const query = this.getAttribute('sref');
-      this.fetchData(query);
-    });
-    this.container.appendChild(backButton);
-
-    // Lecture Title
-    const title = document.createElement('h3');
-    title.textContent = this.currentLecture.shiurtitle;
-    this.container.appendChild(title);
-
-    // Audio Player
-    const audioPlayer = document.createElement('audio');
-    audioPlayer.controls = true;
-    audioPlayer.src = this.currentLecture.shiurdownloadurl || '';
-    audioPlayer.type = 'audio/mpeg';
-    this.container.appendChild(audioPlayer);
+  renderResults(text, query) {
+    this.container.innerHTML = `<h1>Grok LLM Transaltion of ${query}</h1>`;
+    const pElem = document.createElement('p');
+    pElem.innerText = text
+    this.container.appendChild(pElem);
   }
 }
 
