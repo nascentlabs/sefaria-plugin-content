@@ -10,6 +10,7 @@ class SefariaPlugin extends HTMLElement {
     this.counter = 0
     this.uiState = 0
     this.query = ''
+    this.loadingElemCancelToken = null;
     this.loop()
     // Create a container for the results or player
     this.container = document.createElement('div');
@@ -34,7 +35,8 @@ class SefariaPlugin extends HTMLElement {
       }
     `;
 
-    this.container.appendChild(this.buildLoadingElem())
+    this.loadingElem = document.createElement('div')
+    this.container.appendChild(this.loadingElem)
     this.container.appendChild(this.content)
     this.shadowRoot.appendChild(style);
   }
@@ -60,8 +62,10 @@ class SefariaPlugin extends HTMLElement {
   }
 
   async fetchData(query) {
+    this.loopLoadingElem()
     this.uiState = 1
     this.query = query
+    this.content.innerHTML = null;
     const apiUrl = `https://www.sefaria.org/api/v3/texts/${query}`;
     try {
       const response = await fetch(apiUrl);
@@ -115,7 +119,7 @@ class SefariaPlugin extends HTMLElement {
     let s = ''
     for (let idx = 0; idx < text.length; idx++) {
       s+=text[idx]
-      await this.sleep(Math.floor((Math.random() * 70)))
+      await this.sleep(Math.floor((Math.random() * 20)))
       pElem.innerText = s
     }
     
@@ -123,38 +127,34 @@ class SefariaPlugin extends HTMLElement {
     let footerS = ''
     for (let idx = 0; idx < footerStr.length; idx++) {
       footerS+=footerStr[idx]
-      await this.sleep(Math.floor((Math.random() * 100)))
+      await this.sleep(Math.floor((Math.random() * 50)))
       footerElem.innerText = footerS
     }
     this.uiState = 5
   }
 
-  buildLoadingElem(){
-    const loadingElem = document.createElement('div')
-    setInterval(()=>{
+  loopLoadingElem(){
+    this.loadingElemCancelToken = setInterval(()=>{
       const n = this.counter % 4;
       switch (this.uiState) {
         case 1:
-          loadingElem.innerHTML = `<h3>🤖 is 🤔 ${'.'.repeat(n)}</h3>`;
+          this.loadingElem.innerHTML = `<h3>🤖 is 🤔 ${'.'.repeat(n)}</h3>`;
           return;
         case 3:
-          loadingElem.innerHTML = `<h3>🤖 🤒</h3><small>Whoops! Something went wrong.</small>`;
+          this.loadingElem.innerHTML = `<h3>🤖 🤒</h3><small>Whoops! Something went wrong.</small>`;
           return;
         case 4:
-          loadingElem.innerHTML = `<h3>🤖 is typing ${'.'.repeat(n)}</h3>`;
+          this.loadingElem.innerHTML = `<h3>🤖 is typing ${'.'.repeat(n)}</h3>`;
           return;
         case 5:
-        loadingElem.innerHTML = `<h3>🤖 Translation of ${this.query}</h3>`;
-        return;
+          this.loadingElem.innerHTML = `<h3>🤖 Translation of ${this.query}</h3>`;
+          clearInterval(this.loadingElemCancelToken)
+          return;
         default:
-          break;
+          clearInterval(this.loadingElemCancelToken)
+          return;
       }
-        if(this.uiState === 1){
-          return
-        }
-        
     }, 100)
-    return loadingElem
   }
 
   loop(){
