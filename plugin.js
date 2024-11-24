@@ -23,6 +23,7 @@ class SefariaPlugin extends HTMLElement {
     style.textContent = `
       div {
         font-family: Arial, sans-serif;
+        font-size: 18px;
       }
       h3 {
         margin: 0px;
