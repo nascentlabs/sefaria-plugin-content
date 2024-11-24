@@ -23,7 +23,7 @@ class SefariaPlugin extends HTMLElement {
       div {
         font-family: Arial, sans-serif;
       }
-      h1 {
+      h3 {
         margin: 0px;
       }
       .container {
@@ -135,16 +135,16 @@ class SefariaPlugin extends HTMLElement {
       const n = this.counter % 4;
       switch (this.uiState) {
         case 1:
-          loadingElem.innerHTML = `<h1>🤖 is 🤔 ${'.'.repeat(n)}</h1>`;
+          loadingElem.innerHTML = `<h3>🤖 is 🤔 ${'.'.repeat(n)}</h3>`;
           return;
         case 3:
-          loadingElem.innerHTML = `<h1>🤖 🤒</h1><small>Whoops! Something went wrong.</small>`;
+          loadingElem.innerHTML = `<h3>🤖 🤒</h3><small>Whoops! Something went wrong.</small>`;
           return;
         case 4:
-          loadingElem.innerHTML = `<h1>🤖 is typing ${'.'.repeat(n)}</h1>`;
+          loadingElem.innerHTML = `<h3>🤖 is typing ${'.'.repeat(n)}</h3>`;
           return;
         case 5:
-        loadingElem.innerHTML = `<h1>🤖 Translation of ${this.query}</h1>`;
+        loadingElem.innerHTML = `<h3>🤖 Translation of ${this.query}</h3>`;
         return;
         default:
           break;
