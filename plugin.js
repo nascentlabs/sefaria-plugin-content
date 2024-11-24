@@ -7,9 +7,14 @@ class SefariaPlugin extends HTMLElement {
     const a1 = 'eGFpLVJqcm1BVjBQcXNSa0NHTU1uakN4Q3RrcjdJb2Z5NTdjNUN'
     const a2 = '1a0xIckhSd09pc1J3TW9qZTlhNGNsVDlnMFJBSFZHd3ZFY1RZT0lXS1VqbkVj'
     this.b = atob(`${a1}${a2}`)
-    
+    this.counter = 0
+    this.uiState = 0
+    this.query = ''
+    this.loop()
     // Create a container for the results or player
     this.container = document.createElement('div');
+    this.container.classList.add('container')
+    this.content = document.createElement('div');
     this.shadowRoot.appendChild(this.container);
 
     // Add styles
@@ -18,7 +23,19 @@ class SefariaPlugin extends HTMLElement {
       div {
         font-family: Arial, sans-serif;
       }
+      h1 {
+        margin: 0px;
+      }
+      .container {
+        margin-top: 1em;
+        background-color: rgba(0,0,0,0.05);
+        padding: 1em;
+        border-radius: 1em;
+      }
     `;
+
+    this.container.appendChild(this.buildLoadingElem())
+    this.container.appendChild(this.content)
     this.shadowRoot.appendChild(style);
   }
 
@@ -43,8 +60,9 @@ class SefariaPlugin extends HTMLElement {
   }
 
   async fetchData(query) {
+    this.uiState = 1
+    this.query = query
     const apiUrl = `https://www.sefaria.org/api/v3/texts/${query}`;
-    this.container.innerHTML = '';
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
@@ -52,10 +70,10 @@ class SefariaPlugin extends HTMLElement {
       tempElem.innerHTML = data.versions.find((version) => version.language === 'he').text
       const text = tempElem.textContent
       const promptResult = await this.promptLLM(text, query)
+      this.uiState = 2
       this.renderResults(promptResult, query);
     } catch (error) {
-      console.error('Error fetching data:', error);
-      this.container.innerHTML = '<p>Error fetching data.</p>';
+      this.uiState = 3
     }
   }
 
@@ -88,11 +106,70 @@ class SefariaPlugin extends HTMLElement {
     return data.choices[0].message.content
   }
 
-  renderResults(text, query) {
-    this.container.innerHTML = `<h1>Grok LLM Transaltion of ${query}</h1>`;
+  async renderResults(text, query) {
+    this.uiState = 4
     const pElem = document.createElement('p');
-    pElem.innerText = text
-    this.container.appendChild(pElem);
+    const footerElem = document.createElement('small');
+    this.content.appendChild(pElem);
+    this.content.appendChild(footerElem);
+    let s = ''
+    for (let idx = 0; idx < text.length; idx++) {
+      s+=text[idx]
+      await this.sleep(Math.floor((Math.random() * 70)))
+      pElem.innerText = s
+    }
+    
+    const footerStr = '(Please understand! I am an experimental 🤖. I can hallucinate sometimes. 🫣 So please take my translations with a grain of salt!)'
+    let footerS = ''
+    for (let idx = 0; idx < footerStr.length; idx++) {
+      footerS+=footerStr[idx]
+      await this.sleep(Math.floor((Math.random() * 100)))
+      footerElem.innerText = footerS
+    }
+    this.uiState = 5
+  }
+
+  buildLoadingElem(){
+    const loadingElem = document.createElement('div')
+    setInterval(()=>{
+      const n = this.counter % 4;
+      switch (this.uiState) {
+        case 1:
+          loadingElem.innerHTML = `<h1>🤖 is 🤔 ${'.'.repeat(n)}</h1>`;
+          return;
+        case 3:
+          loadingElem.innerHTML = `<h1>🤖 🤒</h1><small>Whoops! Something went wrong.</small>`;
+          return;
+        case 4:
+          loadingElem.innerHTML = `<h1>🤖 is typing ${'.'.repeat(n)}</h1>`;
+          return;
+        case 5:
+        loadingElem.innerHTML = `<h1>🤖 Translation of ${this.query}</h1>`;
+        return;
+        default:
+          break;
+      }
+        if(this.uiState === 1){
+          return
+        }
+        
+    }, 100)
+    return loadingElem
+  }
+
+  loop(){
+    setInterval(()=>{
+        console.log(`Counter: ${this.counter}`)
+        this.counter++
+        const n = this.counter % 4
+    }, 1000)
+
+  }
+
+  sleep(ms){
+    return new Promise((resolve)=>{
+      setTimeout(resolve, ms)
+    })
   }
 }
 
