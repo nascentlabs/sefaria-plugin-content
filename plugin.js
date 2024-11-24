@@ -67,7 +67,7 @@ class SefariaPlugin extends HTMLElement {
       const response = await fetch(apiUrl);
       const data = await response.json();
       const tempElem = document.createElement('p');
-      tempElem.innerHTML = data.versions.find((version) => version.language === 'he').text
+      tempElem.innerHTML = data.versions.find((version) => version.actualLanguage !== 'en').text
       const text = tempElem.textContent
       const promptResult = await this.promptLLM(text, query)
       this.uiState = 2
