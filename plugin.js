@@ -50,7 +50,9 @@ class SefariaPlugin extends HTMLElement {
   // Called when the 'sref' attribute changes
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'sref' && newValue !== oldValue) {
-      this.fetchData(newValue);
+      if(this.uiState === 0 || this.uiState === 5){
+        this.fetchData(newValue);
+      }
     }
   }
 
@@ -161,6 +163,7 @@ class SefariaPlugin extends HTMLElement {
   loop(){
     setInterval(()=>{
         console.log(`Counter: ${this.counter}`)
+        console.log(`UI State: ${this.uiState}`)
         this.counter++
         const n = this.counter % 4
     }, 1000)
