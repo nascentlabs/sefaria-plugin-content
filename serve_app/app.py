@@ -2,7 +2,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-app._static_folder = "../"
+app._static_folder = "../vite-wc/dist"
 
 
 @app.route("/")
