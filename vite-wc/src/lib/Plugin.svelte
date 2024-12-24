@@ -1,2 +1,5 @@
 <svelte:options customElement="sefaria-plugin" />
-<h2>This is a test plugin</h2>
+<script>
+  let { sref } = $props();
+</script>
+<h2>Here is the injected ref: {sref}</h2>
