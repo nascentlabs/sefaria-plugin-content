@@ -41,7 +41,5 @@
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   referrerpolicy="strict-origin-when-cross-origin"
   title="Introduction to the Zohar by Rabbi Ashlag.wmv"
-  width="560"
-  height="315"
   src="https://www.youtube.com/embed/2ixetloUNE4?enablejsapi=1&amp;origin=http%3A%2F%2Flocalhost%3A5173&amp;widgetid=1"
 ></iframe>
