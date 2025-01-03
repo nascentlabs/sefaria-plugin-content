@@ -2,21 +2,10 @@
   import { onDestroy, onMount } from "svelte";
   let { sref } = $props();
 
-  const uid = crypto.randomUUID();
+  let uid = null
 
   onMount(()=>{
     console.log('content plugin onMount called')
-    setTimeout(()=>{
-    // @ts-ignore
-    const player = new YT.Player(uid, {
-      height: "315",
-      width: "560",
-      videoId: "2ixetloUNE4",
-      autoplay: "1",
-      rel: "0",
-    });
-    console.log(player)
-    }, 100)
   })
 
   onDestroy(()=>{
@@ -26,6 +15,23 @@
       elem.remove()
     }
   })
+
+  function CustomDiv(node){
+    uid = crypto.randomUUID();
+    const childDivElem = document.createElement('div');
+    childDivElem.id = uid;
+    node.appendChild(childDivElem)
+    console.log('before player instantiation', node.children[0])
+    // @ts-ignore
+    const player = new YT.Player(uid, {
+      height: "315",
+      width: "560",
+      videoId: "2ixetloUNE4",
+      autoplay: "1",
+      rel: "0",
+    });
+    console.log('after player instantiation', node.children[0])
+  }
 </script>
 
-<div id={uid}></div>
+<div class="yt-wrapper" use:CustomDiv></div>

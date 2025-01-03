@@ -4,6 +4,7 @@
   // @ts-ignore
   window.onYouTubeIframeAPIReady = () => {
     youtubeIframePlayerApiState.ready = true;
+    console.log('window.onYouTubeIframeAPIReady called')
   };
 
   const initYoutubeIframeApiScript = () => {
