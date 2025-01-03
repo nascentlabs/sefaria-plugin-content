@@ -10,7 +10,7 @@
 
 <Init></Init>
 <p>Content for <strong>{sref}</strong></p>
-{#if youtubeIframePlayerApiState.ready === true}
+{#if youtubeIframePlayerApiState.ready === true || true}
   <ContentYoutube {sref}></ContentYoutube>
 {:else}
   <p>Loading...</p>
