@@ -1,18 +1,25 @@
 <script>
+  import { tick } from "svelte";
   let { sref } = $props();
 
+  const uid = crypto.randomUUID();
+  let singletonWasPlayerInstantiated = $state(false);
+
+
+  tick().then(() => {
+    if (singletonWasPlayerInstantiated === true) {
+      return;
+    }
+    singletonWasPlayerInstantiated = true
+    // @ts-ignore
+    const player = new YT.Player(uid, {
+      height: "315",
+      width: "560",
+      videoId: "2ixetloUNE4",
+      autoplay: "1",
+      rel: "0",
+    });
+  });
 </script>
 
-<p>Content for <strong>{sref}</strong></p>
-<iframe
-  autoplay="1"
-  rel="0"
-  width="560"
-  height="315"
-  src="https://www.youtube.com/embed/2ixetloUNE4?si=fqerg2Iu1OWdaVCq"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  referrerpolicy="strict-origin-when-cross-origin"
-  allowfullscreen
-></iframe>
+<div id={uid}></div>
