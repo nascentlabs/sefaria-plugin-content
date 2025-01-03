@@ -1,16 +1,11 @@
 <script>
-  import { tick } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   let { sref } = $props();
 
   const uid = crypto.randomUUID();
-  let singletonWasPlayerInstantiated = $state(false);
 
-
-  tick().then(() => {
-    if (singletonWasPlayerInstantiated === true) {
-      return;
-    }
-    singletonWasPlayerInstantiated = true
+  onMount(()=>{
+    console.log('content plugin onMount called')
     // @ts-ignore
     const player = new YT.Player(uid, {
       height: "315",
@@ -19,7 +14,15 @@
       autoplay: "1",
       rel: "0",
     });
-  });
+  })
+
+  onDestroy(()=>{
+    console.log('content plugin onDestroy called')
+    const elem = document.getElementById(uid)
+    if(elem){
+      elem.remove()
+    }
+  })
 </script>
 
 <div id={uid}></div>
