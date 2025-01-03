@@ -6,6 +6,7 @@
 
   onMount(()=>{
     console.log('content plugin onMount called')
+    setTimeout(()=>{
     // @ts-ignore
     const player = new YT.Player(uid, {
       height: "315",
@@ -14,6 +15,8 @@
       autoplay: "1",
       rel: "0",
     });
+    console.log(player)
+    }, 100)
   })
 
   onDestroy(()=>{
