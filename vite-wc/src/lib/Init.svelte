@@ -2,10 +2,10 @@
   import { youtubeIframePlayerApiState } from "./StateYoutube.svelte";
 
   // @ts-ignore
-  window.onYouTubeIframeAPIReady = () => {
-    youtubeIframePlayerApiState.ready = true;
-    console.log('window.onYouTubeIframeAPIReady called')
-  };
+  // window.onYouTubeIframeAPIReady = () => {
+    // youtubeIframePlayerApiState.ready = true;
+    // console.log('window.onYouTubeIframeAPIReady called')
+  // };
 
   const initYoutubeIframeApiScript = () => {
     const tagName = 'script'
@@ -21,5 +21,5 @@
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
   };
-  initYoutubeIframeApiScript();
+  // initYoutubeIframeApiScript();
 </script>
