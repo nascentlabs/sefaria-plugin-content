@@ -24,18 +24,16 @@
     childDivElem.id = uid;
     node.appendChild(childDivElem);
     console.log("before player instantiation", node.children[0]);
-    // @ts-ignore
     const player = YouTubePlayer(uid, {
-      height: "315",
-      width: "560",
-      videoId: "2ixetloUNE4",
-      autoplay: "1",
-      rel: "0",
-    });
-    console.log("after player instantiation", node.children[0]);
-    setTimeout(()=>{
+        videoId: "2ixetloUNE4",
+        autoplay: "1",
+        rel: "0",
+      });
+      console.log("after player instantiation", node.children[0]);
+
+    setTimeout(() => {
       console.log("after a while", node.children[0]);
-    }, 1000)
+    }, 1000);
   }
 </script>
 

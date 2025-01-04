@@ -1,4 +1,4 @@
-<svelte:options customElement="sefaria-plugin" />
+<svelte:options customElement={{ tag: "sefaria-plugin", shadow: "none" }} />
 
 <script>
   import Init from "./Init.svelte";
