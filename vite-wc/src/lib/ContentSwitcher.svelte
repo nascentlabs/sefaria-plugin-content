@@ -16,34 +16,23 @@
 {#if uiState === 0}
   <p>Available content:</p>
   <div class="grid">
-    <button
-      type="button"
-      style="width: 4rem; display: flex; justify-self: center;"
-      onclick={onYoutubeClick}
-    >
+    <div style="width: 4rem; display: flex; justify-self: center;" onclick={onYoutubeClick}>
       <LogoYoutube />
-    </button>
-    <button
-      type="button"
+    </div>
+    <div
       style="justify-self: start; display: flex; align-items: center; padding: 0px 1rem"
-      onclick={onYoutubeClick}
-    >
+      onclick={onYoutubeClick}>
       <span>Youtube Videos</span>
-    </button>
-    <button
-      type="button"
-      style="width: 2rem; display: flex; justify-self: center;"
-      onclick={onAppleClick}
-    >
+    </div>
+    <div style="width: 2rem; display: flex; justify-self: center;" onclick={onAppleClick}>
       <LogoApple />
-    </button>
-    <button
-      type="button"
+    </div>
+    <div
       style="justify-self: start; display: flex; align-items: center; padding: 0px 1rem"
       onclick={onAppleClick}
     >
       <span>Apple Podcasts</span>
-    </button>
+    </div>
   </div>
 {:else if uiState === 1}
   <ContentYoutube {sref}></ContentYoutube>
